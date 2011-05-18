@@ -76,7 +76,7 @@ GeoIPBase = GeoIPMetaclass('GeoIPBase', (object,), {})
 
 class GeoIP(GeoIPBase):
 
-    def __init__(self, filename, flags=0, cache_clients=[]):
+    def __init__(self, filename, flags=0, cache_clients=['127.0.0.1:11211']):
         """
         Initialize the class.
 
@@ -87,6 +87,7 @@ class GeoIP(GeoIPBase):
             MEMCACHE and MMAP_CACHE.
         @type flags: int
         @param cache_clients: a list of memcache server instances.
+            The default server is 127.0.0.1:11211.
         @type cache_clients: list
         """
         self._filename = filename
