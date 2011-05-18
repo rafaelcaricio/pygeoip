@@ -97,11 +97,13 @@ class GeoIP(GeoIPBase):
             if HAS_MEMCACHE:
                 cache = memcache.Client(cache_clients)
 
-                self._memoryBuffer = cache.get(os.path.basename(self._filename))
+                filebase = os.path.basename(self._filename)
+                self._memoryBuffer = cache.get(filebase)
                 if not self._memoryBuffer:
                     with open(filename, 'rb') as f:
+                        print 'cachemiss'
                         self._memoryBuffer = f.read()
-                        cache.set(os.path.basename(self._filename), self._memoryBuffer)
+                        cache.set(filebase, self._memoryBuffer)
 
                 self._filehandle = StringIO.StringIO(self._memoryBuffer)
             else:
