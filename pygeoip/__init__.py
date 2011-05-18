@@ -101,7 +101,7 @@ class GeoIP(GeoIPBase):
                 if not self._memoryBuffer:
                     with open(filename, 'rb') as f:
                         self._memoryBuffer = f.read()
-                        cache.put(os.path.basename(self._filename), self._memoryBuffer)
+                        cache.set(os.path.basename(self._filename), self._memoryBuffer)
 
                 self._filehandle = StringIO.StringIO(self._memoryBuffer)
             else:
