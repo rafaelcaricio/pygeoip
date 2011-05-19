@@ -32,7 +32,7 @@ import os
 import math
 import socket
 import mmap
-import StringIO
+from cStringIO import StringIO
 
 from const import *
 from util import ip2long
@@ -76,7 +76,7 @@ GeoIPBase = GeoIPMetaclass('GeoIPBase', (object,), {})
 
 class GeoIP(GeoIPBase):
 
-    def __init__(self, filename, flags=0, cache_clients=['127.0.0.1:11211']):
+    def __init__(self, filename, flags=0, db_contents=None):
         """
         Initialize the class.
 
@@ -86,28 +86,16 @@ class GeoIP(GeoIPBase):
             Currently the only supported flags are STANDARD, MEMORY_CACHE,
             MEMCACHE and MMAP_CACHE.
         @type flags: int
-        @param cache_clients: a list of memcache server instances.
-            The default server is 127.0.0.1:11211.
-        @type cache_clients: list
+        @param db_contents: the content of geoip binary file.
+            If passed none IO is realized.
+        @type db_contents: str
         """
         self._filename = filename
         self._flags = flags
 
-        if self._flags & MEMCACHE:
-            if HAS_MEMCACHE:
-                cache = memcache.Client(cache_clients)
-
-                filebase = os.path.basename(self._filename)
-                self._memoryBuffer = cache.get(filebase)
-                if not self._memoryBuffer:
-                    with open(filename, 'rb') as f:
-                        print 'cachemiss'
-                        self._memoryBuffer = f.read()
-                        cache.set(filebase, self._memoryBuffer)
-
-                self._filehandle = StringIO.StringIO(self._memoryBuffer)
-            else:
-                raise MEMCACHE_ERROR
+        if db_contents:
+            self._filehandle = StringIO(db_contents)
+            self._memoryBuffer = db_contents
 
         elif self._flags & MMAP_CACHE:
             with open(filename, 'rb') as f:
