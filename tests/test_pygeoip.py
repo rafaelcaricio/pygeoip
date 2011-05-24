@@ -1,8 +1,20 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import unittest
 
 import pygeoip
+from pygeoip.regions import get_region_name
 
 from config import *
+
+
+class GetRegionTestCase(unittest.TestCase):
+
+    def test_getting_br_region(self):
+        region_name = get_region_name('BR', '27')
+
+        assert region_name == u'São Paulo'
 
 class BaseGeoIPTestCase(unittest.TestCase):
     def setUp(self):
