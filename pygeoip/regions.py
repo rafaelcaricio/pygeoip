@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 """
 
 def get_region_name(country, region_code):
+    if not country in REGIONS or not region_code in REGIONS[country]:
+        return region_code
     return REGIONS[country][region_code]
 
 REGIONS = {
